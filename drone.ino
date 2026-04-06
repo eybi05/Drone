@@ -58,8 +58,12 @@ void calculation_of_pulse(){
   }
 
 
+  //rot[0] = rot[3] = map(cont[0] , -512 , 512 , -10 , 10);
+  //rot[1] = rot[2] = -1 * map(cont[0] , -512 , 512 , -10 , 10);
+
+ 
   for(int i = 0; i < 4; i++){
-    speed[i] = map(abs(cont[1]) , 0, 512 , 1000 , 1500) + colib[i];
+    speed[i] = map(abs(cont[1]) , 0, 512 , 1000 , 1500) + colib[i] + rot[i];
     
     if(velo[i] < speed[i]){
       velo[i] += 10;
@@ -101,7 +105,7 @@ void loop() {
   if(isConnected){
     
     calculation_of_pulse(); 
-    
+
     /*
     for(int i : velo){
       Serial.print(i);

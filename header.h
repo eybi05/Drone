@@ -27,7 +27,7 @@ extern int pin[4];
 extern int speed[4];
 extern int velo[4];
 extern int colib[4];
-
+extern int rot[4];
 
 void processControllers();
 void onConnectedController(ControllerPtr ctl);
