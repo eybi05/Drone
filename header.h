@@ -13,13 +13,21 @@
 
 extern float ax;
 extern float ay;
-extern ControllerPtr myControllers[BP32_MAX_GAMEPADS];
-extern int cont[7];
+extern float gx;
+extern float gy;
+extern float bend_limit;
+extern int colibration_limit_value;
 extern bool isConnected;
+
+extern ControllerPtr myControllers[BP32_MAX_GAMEPADS];
 extern Servo esc[4];
+
+extern int cont[7];
 extern int pin[4];
 extern int speed[4];
 extern int velo[4];
+extern int colib[4];
+
 
 void processControllers();
 void onConnectedController(ControllerPtr ctl);
