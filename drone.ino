@@ -4,8 +4,7 @@
 
 
 
-
-bool ch_colib(int t0 , int t1 , int t2 , int t3){
+bool ch_colib(int colib[], int t0 , int t1 , int t2 , int t3){
   int lm = colibration_limit_value;
 
   if( abs(colib[0] + t0) >= lm){
@@ -25,52 +24,58 @@ bool ch_colib(int t0 , int t1 , int t2 , int t3){
 
 void calculation_of_pulse(){
 
+  power = max(power , 1000);
+  power = min(power , 1300);
+  
+  if(cont[4] == 1){
+    power += 1;
+  }
+  if(cont[5] == 1){
+    power -= 1;
+  }
+
+
   //gx = -1.0 * mapFloat(float(cont[3]) , -512.0 , 512.0 , -bend_limit , bend_limit);
   //gy =     mapFloat(float(cont[2]), -512.0 , 512.0 , -bend_limit , bend_limit);
   
   gx = 0, gy = 0;
 
-  if(ax > gx and ch_colib(-1 , -1 , 1 , 1)){
-    colib[0]--;
-    colib[1]--;
-    colib[2]++;
-    colib[3]++;
+  if(ax > gx and ch_colib(colibx, -1 , -1 , 1 , 1)){
+    colibx[0]--;
+    colibx[1]--;
+    colibx[2]++;
+    colibx[3]++;
   }
 
-  if(ax < gx and ch_colib(1 , 1 , -1 , -1)){
-    colib[0]++;
-    colib[1]++;
-    colib[2]--;
-    colib[3]--;
+  if(ax < gx and ch_colib(colibx, 1 , 1 , -1 , -1)){
+    colibx[0]++;
+    colibx[1]++;
+    colibx[2]--;
+    colibx[3]--;
   }
 
-  if(ay > gy and ch_colib(-1 , 1 , -1 , 1)){
-    colib[0]--;
-    colib[1]++;
-    colib[2]--;
-    colib[3]++;
+  if(ay > gy and ch_colib(coliby, -1 , 1 , -1 , 1)){
+    coliby[0]--;
+    coliby[1]++;
+    coliby[2]--;
+    coliby[3]++;
   }
 
-  if(ay < gy and ch_colib(1 , -1 , 1 , -1)){
-    colib[0]++;
-    colib[1]--;
-    colib[2]++;
-    colib[3]--;
+  if(ay < gy and ch_colib(coliby, 1 , -1 , 1 , -1)){
+    coliby[0]++;
+    coliby[1]--;
+    coliby[2]++;
+    coliby[3]--;
   }
-
-
-  //rot[0] = rot[3] = map(cont[0] , -512 , 512 , -10 , 10);
-  //rot[1] = rot[2] = -1 * map(cont[0] , -512 , 512 , -10 , 10);
-
- 
+  
   for(int i = 0; i < 4; i++){
-    speed[i] = map(abs(cont[1]) , 0, 512 , 1000 , 1500) + colib[i] + rot[i];
+    speed[i] = power; 
     
     if(velo[i] < speed[i]){
-      velo[i] += 10;
+      velo[i] += 15;
     }
     if(velo[i] > speed[i]){
-      velo[i] -= 3;
+      velo[i] -= 10;
     }
   }
 }
@@ -93,6 +98,7 @@ void setup(){
   writeRegister(PWR_MGMT_1, 0x00);
   
   delay(100);
+
 }
 
 
@@ -102,13 +108,14 @@ void loop() {
   processControllers();
   
 
-
   if(isConnected){
     
-    calculation_of_pulse(); 
+    calculation_of_pulse(); ///////
     pulse();
 
-    /*
+    Serial.print(power);
+    Serial.print(" ");
+
     for(int i : velo){
       Serial.print(i);
       Serial.print(" ");
@@ -117,7 +124,8 @@ void loop() {
     Serial.print(" ");
     Serial.print(ay);
     Serial.println(" ");
-    */
+
+
 
   }
   else{

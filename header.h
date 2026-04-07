@@ -16,6 +16,7 @@ extern float ay;
 extern float gx;
 extern float gy;
 extern float bend_limit;
+extern int power = 10;
 extern int colibration_limit_value;
 extern bool isConnected;
 
@@ -26,7 +27,8 @@ extern int cont[7];
 extern int pin[4];
 extern int speed[4];
 extern int velo[4];
-extern int colib[4];
+extern int colibx[4];
+extern int coliby[4];
 extern int rot[4];
 
 void processControllers();

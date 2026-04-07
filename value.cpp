@@ -8,7 +8,8 @@ float ax, ay;
 float gx = 0, gy = 0;
 bool isConnected = false;
 
-int colibration_limit_value = 10;
+int power = 1000;
+int colibration_limit_value = 5;
 float bend_limit = 0.30;
 
 int cont[7];     // LX LY RX RY L1 R1
@@ -17,5 +18,6 @@ Servo esc[4];
 int pin[4] = {14, 27, 26, 25};
 int speed[4] = {1000 , 1000 , 1000, 1000};
 int velo[4] = {1000, 1000 , 1000 , 1000};
-int colib[4] = {0 , 0, 0, 0};
+int colibx[4] = {0 , 0, 0, 0};
+int coliby[4] = {0 , 0, 0, 0};
 int rot[4] = {0 , 0, 0 , 0};
