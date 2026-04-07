@@ -1,8 +1,9 @@
 #include "header.h"
 
-float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
+
+
+
+
 
 bool ch_colib(int t0 , int t1 , int t2 , int t3){
   int lm = colibration_limit_value;
@@ -105,6 +106,7 @@ void loop() {
   if(isConnected){
     
     calculation_of_pulse(); 
+    pulse();
 
     /*
     for(int i : velo){
@@ -116,7 +118,7 @@ void loop() {
     Serial.print(ay);
     Serial.println(" ");
     */
-    
+
   }
   else{
     Serial.println("Waiting progres...");
