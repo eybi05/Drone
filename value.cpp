@@ -9,7 +9,7 @@ float gx = 0, gy = 0;
 bool isConnected = false;
 
 int power = 1000;
-int colibration_limit_value = 5;
+int colibration_limit_value = 3;
 float bend_limit = 0.30;
 
 int cont[7];     // LX LY RX RY L1 R1

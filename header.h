@@ -16,7 +16,7 @@ extern float ay;
 extern float gx;
 extern float gy;
 extern float bend_limit;
-extern int power = 10;
+extern int power;
 extern int colibration_limit_value;
 extern bool isConnected;
 

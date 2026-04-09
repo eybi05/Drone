@@ -1,9 +1,5 @@
 #include "header.h"
 
-
-
-
-
 bool ch_colib(int colib[], int t0 , int t1 , int t2 , int t3){
   int lm = colibration_limit_value;
 
@@ -46,7 +42,7 @@ void calculation_of_pulse(){
     colibx[2]++;
     colibx[3]++;
   }
-
+ 
   if(ax < gx and ch_colib(colibx, 1 , 1 , -1 , -1)){
     colibx[0]++;
     colibx[1]++;
@@ -69,13 +65,13 @@ void calculation_of_pulse(){
   }
   
   for(int i = 0; i < 4; i++){
-    speed[i] = power; 
+    speed[i] = power + colibx[i] + coliby[i]; 
     
     if(velo[i] < speed[i]){
       velo[i] += 15;
     }
     if(velo[i] > speed[i]){
-      velo[i] -= 10;
+      velo[i] -= 11;
     }
   }
 }
@@ -102,6 +98,21 @@ void setup(){
 }
 
 
+void print(){
+  Serial.print(power);
+  Serial.print(" ");
+
+  for(int i : velo){
+    Serial.print(i);
+    Serial.print(" ");
+  }
+  Serial.print(ax);
+  Serial.print(" ");
+  Serial.print(ay);
+  Serial.println(" ");
+}
+
+
 void loop() {
   readMPUData();
   BP32.update();
@@ -110,23 +121,10 @@ void loop() {
 
   if(isConnected){
     
-    calculation_of_pulse(); ///////
+    calculation_of_pulse();
     pulse();
 
-    Serial.print(power);
-    Serial.print(" ");
-
-    for(int i : velo){
-      Serial.print(i);
-      Serial.print(" ");
-    }
-    Serial.print(ax);
-    Serial.print(" ");
-    Serial.print(ay);
-    Serial.println(" ");
-
-
-
+    print();
   }
   else{
     Serial.println("Waiting progres...");
