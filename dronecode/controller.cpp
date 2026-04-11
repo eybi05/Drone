@@ -1,15 +1,5 @@
 #include "header.h"
 
-float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-void pulse(){
-  for(int i = 0 ; i < 4; i++){
-    esc[i].writeMicroseconds(velo[i]);
-  }
-}
-
 
 void processControllers() {
   for (auto ctl : myControllers) {
@@ -20,7 +10,9 @@ void processControllers() {
       cont[3] = -1 * ctl->axisRY() + 4;
       cont[4] = ctl->l1();
       cont[5] = ctl->r1();
-      cont[6] = ctl->battery() *100 / 256 ;
+      cont[6] = ctl->a(); 
+      cont[7] = ctl->x();
+      cont[8] = ctl->b();
     }
   }
 }
@@ -52,42 +44,4 @@ void onDisconnectedController(ControllerPtr ctl) {
       break;
     }
   }
-}
-
-void writeRegister(uint8_t reg, uint8_t data) {
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(reg);
-  Wire.write(data);
-  Wire.endTransmission();
-}
-
-uint8_t readRegister(uint8_t reg) {
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(reg);
-  Wire.endTransmission(false);
-
-  Wire.requestFrom(MPU_ADDR, 1);
-  if (Wire.available()) {
-    return Wire.read();
-  }
-  return 0;
-}
-
-void readMPUData() {
-  Wire.beginTransmission(MPU_ADDR);
-  Wire.write(ACCEL_XOUT_H);
-  Wire.endTransmission(false);
-
-  Wire.requestFrom(MPU_ADDR, 14);
-
-  int16_t accelX, accelY;
-
-  if (Wire.available() == 14) {
-    accelX = (Wire.read() << 8) | Wire.read();
-    accelY = (Wire.read() << 8) | Wire.read();
-  }
-
-  ax = accelX / 16384.0;
-  ay = accelY / 16384.0;
-
 }

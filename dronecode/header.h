@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <Bluepad32.h>
 #include <ESP32Servo.h>
+#include <math.h>
 
 
 #ifndef HEADER_H
@@ -11,33 +12,52 @@
 #define ACCEL_XOUT_H 0x3B
 #define GYRO_XOUT_H  0x43
 
-extern float ax;
-extern float ay;
-extern float gx;
-extern float gy;
-extern float bend_limit;
+
 extern int power;
-extern int colibration_limit_value;
 extern bool isConnected;
+
+extern float gx, gy, gz;
+extern float ax, ay, az;
+
+extern float angleX;
+extern float angleY;
+
+extern float accelAngleX;
+extern float accelAngleY;
+
+extern float gyroOffsetX;
+extern float gyroOffsetY;
+extern float gyroOffsetZ;
+
+extern float accelOffsetX;
+extern float accelOffsetY;
+extern float accelOffsetZ;
+
+extern unsigned long lastTime;
+extern const int samples;
+
 
 extern ControllerPtr myControllers[BP32_MAX_GAMEPADS];
 extern Servo esc[4];
 
-extern int cont[7];
 extern int pin[4];
-extern int speed[4];
+extern int cont[9];
 extern int velo[4];
-extern int colibx[4];
-extern int coliby[4];
-extern int rot[4];
+extern int speed[4];
 
 void processControllers();
 void onConnectedController(ControllerPtr ctl);
 void onDisconnectedController(ControllerPtr ctl);
+
 void writeRegister(uint8_t reg, uint8_t data);
-uint8_t readRegister(uint8_t reg);
-void readMPUData();
+void setupMPU();
+bool readMPU();
+void calibrateMPU();
+void updateAngles();
+void initAnglesFromAccel();
+
 float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
 void pulse();
+
 
 #endif
