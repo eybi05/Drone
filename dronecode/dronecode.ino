@@ -1,32 +1,19 @@
 #include "header.h"
 
 
-int rot = 0;
-bool pressed = 0;
 
 void calculation_of_pulse(){
-  float x = angleX;
-  float y = angleY;
-
-    
   power = min(power , 1300);
   power = max(power, 1000);
   
-  float del = 4;
+  float del = 1;
 
-
-  if(cont[7] == 1 and pressed == 0){
-    pressed = 1;
-    rot++;
+  if(cont[7] == 1){
+    del -= 0.01;
   }
-  else if(cont[8] == 1 and pressed == 0){
-    pressed = 1;
-    rot--;
+  if(cont[8] == 1){
+    del -= 0.01;
   }
-  else if(cont[7] == 0 and cont[8] == 0){
-    pressed = 0;
-  }
-
   if(cont[6] == 1){
     power = 1000;
     rot = 0;
@@ -42,31 +29,25 @@ void calculation_of_pulse(){
     velo[i] = power;  
   }
 
-  int cx = map(cont[2] , -512 , 512, -5, 5);
-  int cy = map(cont[3] , -512 , 512, -5, 5);
+  float cx = mapFloat(cont[2] , -512 , 512, -0.30, 0.30);
+  float cy = mapFloat(cont[3] , -512 , 512, -0.30, 0.30);
   
+  float rot = mapFloat(cont[0] , -512 , 512 , -5 , 5);
 
+  float x = angleX + cx;
+  float y = angleY + cy;
 
   velo[0] += (x - y) * del;
   velo[1] -= (x - y) * del;
   velo[2] += (x + y) * del;
   velo[3] -= (x + y) * del;
   
-  /*
-  velo[0] += cx - cy ;
-  velo[1] += -cx - cy;
-  velo[2] += cx + cy;
-  velo[3] += -cx + cy;
-  */
-
   velo[0] += rot;
   velo[1] -= rot;
   velo[2] -= rot;
   velo[3] += rot;
-
-  
-
 }
+
 
 void setup(){
   for(int i = 0; i < 4; i++){
