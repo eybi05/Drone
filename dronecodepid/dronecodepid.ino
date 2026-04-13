@@ -1,7 +1,7 @@
 #include "header.h"
 // 1.2  0.001  0.01 on video... 
-float rollKp = 2.0, rollKi = 0.02, rollKd = 0.8;
-float pitchKp = 2.0, pitchKi = 0.02, pitchKd = 0.8;
+float rollKp = 1.5, rollKi = 0.03, rollKd = 0.002;
+float pitchKp = 1.5, pitchKi = 0.03, pitchKd = 0.002;
 
 
 void chCont(){
@@ -20,23 +20,22 @@ void calculation_of_pulse(){
   power = min(power , 1300);
   power = max(power, 1000);
 
-  float targetRoll = 0;
-  float targetPitch = 0;
-
-  float rollPID = pidAxis(targetRoll, angleX, rollIntegral, rollPrevError, rollKp, rollKi, rollKd, dt);
+  float targetRoll = mapFloat(cont[2], -512 , 512 , -10.0 ,10.0);
+  float targetPitch = mapFloat(cont[3]*-1, -512 , 512 , -10.0 ,10.0);;
+  
+  float rollPID = pidAxis(targetRoll, -angleX, rollIntegral, rollPrevError, rollKp, rollKi, rollKd, dt);
 
   float pitchPID = pidAxis(targetPitch, angleY, pitchIntegral, pitchPrevError, pitchKp, pitchKi, pitchKd, dt);
-
-  velo[0] = power + pitchPID + rollPID;
-  velo[1] = power + pitchPID - rollPID;
-  velo[2] = power - pitchPID - rollPID;
-  velo[3] = power - pitchPID + rollPID;
+  
+  velo[0] = power  + rollPID + pitchPID;
+  velo[1] = power  - rollPID + pitchPID;
+  velo[2] = power  + rollPID - pitchPID;
+  velo[3] = power  - rollPID - pitchPID;
 
   for(int i = 0; i < 4; i++){
-    velo[i] = constrain(velo[i] , 1000 , 1500);
+    velo[i] = constrain(velo[i] , 1000 , 1700);
   }
 }
-
 
 void setup(){
   for(int i = 0; i < 4; i++){
@@ -74,13 +73,15 @@ void loop(){
   BP32.update();
   processControllers();
 
-
-
   if(isConnected){
     chCont();    
     calculation_of_pulse();
     pulse();
 
+    for(int i = 0; i < 4; i++){
+      print(velo[i], " ");
+    }
+    print(angleX, "\n");
   }
   else{
     Serial.println("Waiting progres...");
