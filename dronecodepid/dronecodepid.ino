@@ -1,18 +1,26 @@
 #include "header.h"
 // 1.2  0.001  0.01 on video... 
-float rollKp = 1.5, rollKi = 0.03, rollKd = 0.002;
-float pitchKp = 1.5, pitchKi = 0.03, pitchKd = 0.002;
+float rollKp = 1.6, rollKi = 0.03, rollKd = 0.002;
+float pitchKp = 1.6, pitchKi = 0.03, pitchKd = 0.002;
 
+
+unsigned long long tm = 0;
 
 void chCont(){
-  if(cont[6] == 1){
-    power = 1000;
-  }
-  if(cont[4] == 1){
-    power++;
-  }
-  if(cont[5] == 1){
-    power--;
+  
+  if(micros() - tm >= 10000){
+
+    if(cont[6] == 1){
+      power = 1000;
+    }
+    if(cont[4] == 1){
+      power++;
+    }
+    if(cont[5] == 1){
+      power--;
+    }
+
+    tm = micros();
   }
 }
 
@@ -57,7 +65,8 @@ void setup(){
   calibrateMPU();
   initAnglesFromAccel();
   lastTime = micros();
-  
+  tm = micros();
+
   delay(100);
 }
 
@@ -65,7 +74,8 @@ void setup(){
 
 void loop(){
   unsigned long now = micros();
-  dt = (now - lastTime) / 1000000.0;
+  
+  sdt = (now - lastTime) / 1000000.0;
   lastTime = now;
   if (dt <= 0 || dt > 0.1) dt = 0.01;
   
@@ -77,16 +87,17 @@ void loop(){
     chCont();    
     calculation_of_pulse();
     pulse();
-
+    /*
     for(int i = 0; i < 4; i++){
       print(velo[i], " ");
     }
     print(angleX, "\n");
+    */
   }
   else{
     Serial.println("Waiting progres...");
   }
   
-  delay(10);
+  //delay(10);
 
 }
